@@ -56,3 +56,47 @@ async def test_case_boundaries_prevent_cross_case_evidence_link():
     ctx=MockContext(); a=await m.create_case(ctx,CreateCaseParams(case_name="A",organization_name="Acme",period="2026",request_type="audit",owner="E")); b=await m.create_case(ctx,CreateCaseParams(case_name="B",organization_name="Beta",period="2026",request_type="audit",owner="E"))
     item=await m.add_checklist_item(ctx,AddChecklistItemParams(case_id=a.data.id,label="Ledger"))
     result=await m.register_evidence(ctx,RegisterEvidenceParams(case_id=b.data.id,checklist_item_id=item.data.id,title_text="Ledger",source_url="https://drive.example/ledger.pdf")); assert result.status != "success"
+
+
+def test_status_label_translates_internal_codes_for_every_language():
+    for language in ("en", "ru", "ro"):
+        copy = panels.COPY[language]
+        assert panels._status_label("approved_for_pack", copy) != "approved_for_pack"
+        assert panels._status_label("needs_review", copy) != "needs_review"
+        # Unknown/custom statuses still render readably instead of raising.
+        assert panels._status_label("some_future_status", copy) == "some future status"
+
+
+def test_next_step_message_guides_a_first_time_user_through_the_workflow():
+    copy = panels.COPY["en"]
+    case = {"status": "open"}
+    assert panels._next_step_message(copy, case, [], [], []) == copy["next_missing_checklist"]
+
+    checklist = [{"status": "open"}, {"status": "approved_for_pack"}]
+    assert panels._next_step_message(copy, case, checklist, [], []) == copy["next_checklist_incomplete"].format(approved=1, total=2)
+
+    checklist_done = [{"status": "approved_for_pack"}]
+    assert panels._next_step_message(copy, case, checklist_done, [], []) == copy["next_need_evidence"]
+
+    evidence_done = [{"status": "approved_for_pack"}]
+    assert panels._next_step_message(copy, case, checklist_done, evidence_done, []) == copy["next_ready_to_build"]
+    assert panels._next_step_message(copy, case, checklist_done, evidence_done, [{"status": "draft"}]) == copy["next_ready_to_approve"]
+
+    approved_case = {"status": "approved"}
+    assert panels._next_step_message(copy, approved_case, checklist_done, evidence_done, [{"status": "draft"}]) == copy["next_done"]
+
+
+def test_pack_summary_reports_readable_counts_and_blockers():
+    copy = panels.COPY["en"]
+    checklist = [{"status": "approved_for_pack"}, {"status": "open"}]
+    evidence = [{"status": "approved_for_pack"}]
+    tasks = [{"status": "done"}, {"status": "open"}]
+    summary = panels._pack_summary(copy, checklist, evidence, tasks)
+    assert "1/2 checklist items accepted" in summary
+    assert "1/1 evidence approved" in summary
+    assert "1/2 tasks done" in summary
+    assert copy["pack_summary_blockers"].format(blockers=1) in summary
+
+    all_clear = panels._pack_summary(copy, [{"status": "approved_for_pack"}], [{"status": "approved_for_pack"}], [])
+    assert copy["pack_summary_clear"] in all_clear
+
