@@ -1,0 +1,2173 @@
+{
+  "manifest_schema_version": 3,
+  "sdk_version": "5.9.12",
+  "app_id": "tax-audit-evidence-hub",
+  "version": "0.1.0",
+  "name": "Tax & Audit Evidence Readiness Hub",
+  "description": "Human-led evidence readiness for tax and audit preparation: cases, checklists, evidence, tasks, pack indexes and approvals. Never makes tax decisions or files returns.",
+  "icon": "icon.svg",
+  "actions_explicit": true,
+  "system": false,
+  "capabilities": [
+    "tax_audit_evidence:read",
+    "tax_audit_evidence:write"
+  ],
+  "tools": [
+    {
+      "name": "create_case",
+      "description": "Create a human-owned tax/audit preparation case. This does not create a tax opinion or filing.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "case.create"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_name": {
+            "description": "Human-readable case name, e.g. 'FY2025 audit PBC — Acme'",
+            "title": "Case Name",
+            "type": "string"
+          },
+          "organization_name": {
+            "description": "Company/client for this case",
+            "title": "Organization Name",
+            "type": "string"
+          },
+          "period": {
+            "description": "Human-defined reporting or audit period, e.g. 'FY2025' or '2026-01'",
+            "title": "Period",
+            "type": "string"
+          },
+          "request_type": {
+            "description": "Purpose, e.g. audit PBC, tax inquiry, month-end close",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "owner": {
+            "description": "Person accountable for coordinating the preparation",
+            "title": "Owner",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_name",
+          "organization_name",
+          "period",
+          "request_type",
+          "owner"
+        ],
+        "title": "CreateCaseParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "open",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_name": {
+            "default": "",
+            "title": "Case Name",
+            "type": "string"
+          },
+          "organization_name": {
+            "default": "",
+            "title": "Organization Name",
+            "type": "string"
+          },
+          "period": {
+            "default": "",
+            "title": "Period",
+            "type": "string"
+          },
+          "request_type": {
+            "default": "",
+            "title": "Request Type",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "title": "Owner",
+            "type": "string"
+          },
+          "created_at": {
+            "default": "",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "default": "",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "EvidenceCase",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.create_case",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "list_cases",
+      "description": "List evidence readiness cases.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "status": {
+            "default": "",
+            "description": "Optional: open|ready_for_review|approved|closed",
+            "title": "Status",
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum cases to return",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "title": "ListCasesParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "EvidenceCase": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "default": "open",
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "case_name": {
+                "default": "",
+                "title": "Case Name",
+                "type": "string"
+              },
+              "organization_name": {
+                "default": "",
+                "title": "Organization Name",
+                "type": "string"
+              },
+              "period": {
+                "default": "",
+                "title": "Period",
+                "type": "string"
+              },
+              "request_type": {
+                "default": "",
+                "title": "Request Type",
+                "type": "string"
+              },
+              "owner": {
+                "default": "",
+                "title": "Owner",
+                "type": "string"
+              },
+              "created_at": {
+                "default": "",
+                "title": "Created At",
+                "type": "string"
+              },
+              "updated_at": {
+                "default": "",
+                "title": "Updated At",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ],
+            "title": "EvidenceCase",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceCase"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Total"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page"
+          },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "EvidenceCaseList",
+        "type": "object",
+        "x-sdl": "entity-list"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "add_checklist_item",
+      "description": "Add a human-authored document/control requirement to a case.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "checklist_item.create"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id from list_cases",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "label": {
+            "description": "Human-authored required document/control item",
+            "title": "Label",
+            "type": "string"
+          },
+          "description": {
+            "default": "",
+            "description": "Why the item is needed or how it must be checked",
+            "title": "Description",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "description": "Person responsible for providing/reviewing it",
+            "title": "Owner",
+            "type": "string"
+          },
+          "due_date": {
+            "default": "",
+            "description": "Optional human-set due date, YYYY-MM-DD",
+            "title": "Due Date",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "label"
+        ],
+        "title": "AddChecklistItemParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "default": "missing",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "label": {
+            "default": "",
+            "title": "Label",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "title": "Owner",
+            "type": "string"
+          },
+          "due_date": {
+            "default": "",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "review_note": {
+            "default": "",
+            "title": "Review Note",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "title": "Approved By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "ChecklistItem",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.add_checklist_item",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "update_checklist_item",
+      "description": "Update a checklist status. Only a named human may mark it approved_for_pack.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "checklist_item.update"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "checklist_item_id": {
+            "description": "Checklist item id",
+            "title": "Checklist Item Id",
+            "type": "string"
+          },
+          "status": {
+            "description": "missing|received|needs_review|rejected|approved_for_pack",
+            "title": "Status",
+            "type": "string"
+          },
+          "review_note": {
+            "default": "",
+            "description": "Human review note; required for rejection",
+            "title": "Review Note",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "description": "Human approver; required for approved_for_pack",
+            "title": "Approved By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "checklist_item_id",
+          "status"
+        ],
+        "title": "UpdateChecklistItemParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "default": "",
+            "title": "Description",
+            "type": "string"
+          },
+          "status": {
+            "default": "missing",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "label": {
+            "default": "",
+            "title": "Label",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "title": "Owner",
+            "type": "string"
+          },
+          "due_date": {
+            "default": "",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "review_note": {
+            "default": "",
+            "title": "Review Note",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "title": "Approved By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "ChecklistItem",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.update_checklist_item",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "register_evidence",
+      "description": "Register an existing HTTPS evidence source. This app does not fetch, interpret or validate the document.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "evidence.register"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id from list_cases",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "title_text": {
+            "description": "Human-readable document/evidence title",
+            "title": "Title Text",
+            "type": "string"
+          },
+          "source_url": {
+            "description": "HTTPS link to a document or its approved storage location",
+            "title": "Source Url",
+            "type": "string"
+          },
+          "source_type": {
+            "default": "document",
+            "description": "document|email|link|other",
+            "title": "Source Type",
+            "type": "string"
+          },
+          "checklist_item_id": {
+            "default": "",
+            "description": "Optional checklist item this evidence supports",
+            "title": "Checklist Item Id",
+            "type": "string"
+          },
+          "period": {
+            "default": "",
+            "description": "Period asserted by the submitting user; requires human review",
+            "title": "Period",
+            "type": "string"
+          },
+          "reference": {
+            "default": "",
+            "description": "Reference, invoice number, registry number, etc.; requires human review",
+            "title": "Reference",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "description": "Person who supplied or owns the evidence",
+            "title": "Owner",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "title_text",
+          "source_url"
+        ],
+        "title": "RegisterEvidenceParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "received",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "checklist_item_id": {
+            "default": "",
+            "title": "Checklist Item Id",
+            "type": "string"
+          },
+          "title_text": {
+            "default": "",
+            "title": "Title Text",
+            "type": "string"
+          },
+          "source_url": {
+            "default": "",
+            "title": "Source Url",
+            "type": "string"
+          },
+          "source_type": {
+            "default": "",
+            "title": "Source Type",
+            "type": "string"
+          },
+          "period": {
+            "default": "",
+            "title": "Period",
+            "type": "string"
+          },
+          "reference": {
+            "default": "",
+            "title": "Reference",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "title": "Owner",
+            "type": "string"
+          },
+          "review_note": {
+            "default": "",
+            "title": "Review Note",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "title": "Approved By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "EvidenceItem",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.register_evidence",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "review_evidence",
+      "description": "Record a human evidence review. Only a named human may mark evidence approved_for_pack.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "evidence.review"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "evidence_item_id": {
+            "description": "Evidence item id",
+            "title": "Evidence Item Id",
+            "type": "string"
+          },
+          "status": {
+            "description": "received|needs_review|rejected|approved_for_pack",
+            "title": "Status",
+            "type": "string"
+          },
+          "review_note": {
+            "default": "",
+            "description": "Human review note; required for rejection",
+            "title": "Review Note",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "description": "Human approver; required for approved_for_pack",
+            "title": "Approved By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "evidence_item_id",
+          "status"
+        ],
+        "title": "ReviewEvidenceParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "received",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "checklist_item_id": {
+            "default": "",
+            "title": "Checklist Item Id",
+            "type": "string"
+          },
+          "title_text": {
+            "default": "",
+            "title": "Title Text",
+            "type": "string"
+          },
+          "source_url": {
+            "default": "",
+            "title": "Source Url",
+            "type": "string"
+          },
+          "source_type": {
+            "default": "",
+            "title": "Source Type",
+            "type": "string"
+          },
+          "period": {
+            "default": "",
+            "title": "Period",
+            "type": "string"
+          },
+          "reference": {
+            "default": "",
+            "title": "Reference",
+            "type": "string"
+          },
+          "owner": {
+            "default": "",
+            "title": "Owner",
+            "type": "string"
+          },
+          "review_note": {
+            "default": "",
+            "title": "Review Note",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "title": "Approved By",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "EvidenceItem",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.review_evidence",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "create_task",
+      "description": "Create a human-owned preparation task for a case.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "case_task.create"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "title_text": {
+            "description": "Concrete human-owned preparation task",
+            "title": "Title Text",
+            "type": "string"
+          },
+          "assignee": {
+            "default": "",
+            "description": "Person responsible",
+            "title": "Assignee",
+            "type": "string"
+          },
+          "due_date": {
+            "default": "",
+            "description": "Optional human-set due date, YYYY-MM-DD",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "evidence_item_id": {
+            "default": "",
+            "description": "Optional evidence item this task relates to",
+            "title": "Evidence Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "title_text"
+        ],
+        "title": "CreateTaskParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "open",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "title_text": {
+            "default": "",
+            "title": "Title Text",
+            "type": "string"
+          },
+          "assignee": {
+            "default": "",
+            "title": "Assignee",
+            "type": "string"
+          },
+          "due_date": {
+            "default": "",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "evidence_item_id": {
+            "default": "",
+            "title": "Evidence Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "CaseTask",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.create_task",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "update_task",
+      "description": "Update a human-owned preparation task status.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "case_task.update"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "task_id": {
+            "description": "Task id",
+            "title": "Task Id",
+            "type": "string"
+          },
+          "status": {
+            "description": "open|in_progress|blocked|done",
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "task_id",
+          "status"
+        ],
+        "title": "UpdateTaskParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "open",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "title_text": {
+            "default": "",
+            "title": "Title Text",
+            "type": "string"
+          },
+          "assignee": {
+            "default": "",
+            "title": "Assignee",
+            "type": "string"
+          },
+          "due_date": {
+            "default": "",
+            "title": "Due Date",
+            "type": "string"
+          },
+          "evidence_item_id": {
+            "default": "",
+            "title": "Evidence Item Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "CaseTask",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.update_task",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "list_checklist_items",
+      "description": "List case checklist items and their review status.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "description": "Optional status filter",
+            "title": "Status",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum items to return",
+            "maximum": 200,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "ListCaseItemsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "ChecklistItem": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "default": "",
+                "title": "Description",
+                "type": "string"
+              },
+              "status": {
+                "default": "missing",
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "case_id": {
+                "default": "",
+                "title": "Case Id",
+                "type": "string"
+              },
+              "label": {
+                "default": "",
+                "title": "Label",
+                "type": "string"
+              },
+              "owner": {
+                "default": "",
+                "title": "Owner",
+                "type": "string"
+              },
+              "due_date": {
+                "default": "",
+                "title": "Due Date",
+                "type": "string"
+              },
+              "review_note": {
+                "default": "",
+                "title": "Review Note",
+                "type": "string"
+              },
+              "approved_by": {
+                "default": "",
+                "title": "Approved By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ],
+            "title": "ChecklistItem",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/ChecklistItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Total"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page"
+          },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "ChecklistItemList",
+        "type": "object",
+        "x-sdl": "entity-list"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "list_evidence",
+      "description": "List registered evidence sources and human review status for one case.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "description": "Optional status filter",
+            "title": "Status",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum items to return",
+            "maximum": 200,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "ListCaseItemsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "EvidenceItem": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "default": "received",
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "case_id": {
+                "default": "",
+                "title": "Case Id",
+                "type": "string"
+              },
+              "checklist_item_id": {
+                "default": "",
+                "title": "Checklist Item Id",
+                "type": "string"
+              },
+              "title_text": {
+                "default": "",
+                "title": "Title Text",
+                "type": "string"
+              },
+              "source_url": {
+                "default": "",
+                "title": "Source Url",
+                "type": "string"
+              },
+              "source_type": {
+                "default": "",
+                "title": "Source Type",
+                "type": "string"
+              },
+              "period": {
+                "default": "",
+                "title": "Period",
+                "type": "string"
+              },
+              "reference": {
+                "default": "",
+                "title": "Reference",
+                "type": "string"
+              },
+              "owner": {
+                "default": "",
+                "title": "Owner",
+                "type": "string"
+              },
+              "review_note": {
+                "default": "",
+                "title": "Review Note",
+                "type": "string"
+              },
+              "approved_by": {
+                "default": "",
+                "title": "Approved By",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ],
+            "title": "EvidenceItem",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/EvidenceItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Total"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page"
+          },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "EvidenceItemList",
+        "type": "object",
+        "x-sdl": "entity-list"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "list_tasks",
+      "description": "List human-owned preparation tasks for one case.",
+      "action_type": "read",
+      "chain_callable": true,
+      "effects": [],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "status": {
+            "default": "",
+            "description": "Optional status filter",
+            "title": "Status",
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum items to return",
+            "maximum": 200,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "ListCaseItemsParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "$defs": {
+          "CaseTask": {
+            "properties": {
+              "id": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ],
+                "title": "Id"
+              },
+              "title": {
+                "title": "Title",
+                "type": "string"
+              },
+              "kind": {
+                "default": "",
+                "title": "Kind",
+                "type": "string"
+              },
+              "subtitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Subtitle"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Description"
+              },
+              "status": {
+                "default": "open",
+                "title": "Status",
+                "type": "string"
+              },
+              "url": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Url"
+              },
+              "case_id": {
+                "default": "",
+                "title": "Case Id",
+                "type": "string"
+              },
+              "title_text": {
+                "default": "",
+                "title": "Title Text",
+                "type": "string"
+              },
+              "assignee": {
+                "default": "",
+                "title": "Assignee",
+                "type": "string"
+              },
+              "due_date": {
+                "default": "",
+                "title": "Due Date",
+                "type": "string"
+              },
+              "evidence_item_id": {
+                "default": "",
+                "title": "Evidence Item Id",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ],
+            "title": "CaseTask",
+            "type": "object",
+            "x-sdl": "entity"
+          }
+        },
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/CaseTask"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Total"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Page"
+          },
+          "has_more": {
+            "default": false,
+            "title": "Has More",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "items"
+        ],
+        "title": "CaseTaskList",
+        "type": "object",
+        "x-sdl": "entity-list"
+      },
+      "event": "",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "build_evidence_pack",
+      "description": "Build a read-only index of evidence already approved by a named human. It is not a tax opinion or filing.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "evidence_pack.build"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id",
+            "title": "Case Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id"
+        ],
+        "title": "BuildEvidencePackParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "draft",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "title": "Approved By",
+            "type": "string"
+          },
+          "approved_at": {
+            "default": "",
+            "title": "Approved At",
+            "type": "string"
+          },
+          "item_count": {
+            "default": 0,
+            "title": "Item Count",
+            "type": "integer"
+          },
+          "index_markdown": {
+            "default": "",
+            "title": "Index Markdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "EvidencePack",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.build_evidence_pack",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    },
+    {
+      "name": "approve_evidence_pack",
+      "description": "A named human approves the latest evidence-pack index for its stated preparation purpose. Not a tax opinion or filing approval.",
+      "action_type": "write",
+      "chain_callable": true,
+      "effects": [
+        "evidence_pack.approve"
+      ],
+      "id_projection": "",
+      "params_schema": {
+        "properties": {
+          "case_id": {
+            "description": "Case id",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "approved_by": {
+            "description": "Named human who confirms the pack is ready for its stated purpose",
+            "title": "Approved By",
+            "type": "string"
+          },
+          "approval_note": {
+            "description": "Human approval note; this is not a tax opinion",
+            "title": "Approval Note",
+            "type": "string"
+          }
+        },
+        "required": [
+          "case_id",
+          "approved_by",
+          "approval_note"
+        ],
+        "title": "ApproveEvidencePackParams",
+        "type": "object"
+      },
+      "return_schema": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "kind": {
+            "default": "",
+            "title": "Kind",
+            "type": "string"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Description"
+          },
+          "status": {
+            "default": "draft",
+            "title": "Status",
+            "type": "string"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Url"
+          },
+          "case_id": {
+            "default": "",
+            "title": "Case Id",
+            "type": "string"
+          },
+          "approved_by": {
+            "default": "",
+            "title": "Approved By",
+            "type": "string"
+          },
+          "approved_at": {
+            "default": "",
+            "title": "Approved At",
+            "type": "string"
+          },
+          "item_count": {
+            "default": 0,
+            "title": "Item Count",
+            "type": "integer"
+          },
+          "index_markdown": {
+            "default": "",
+            "title": "Index Markdown",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "EvidencePack",
+        "type": "object",
+        "x-sdl": "entity"
+      },
+      "event": "tax-audit-evidence-hub.approve_evidence_pack",
+      "background": false,
+      "long_running": false,
+      "scopes": [],
+      "owner_chat_tool": "tax-audit-evidence-hub"
+    }
+  ],
+  "signals": [],
+  "schedules": [],
+  "required_scopes": [],
+  "icon_size_bytes": 472,
+  "lifecycle": {
+    "on_install": true,
+    "health_check": {
+      "interval_sec": 60
+    }
+  },
+  "lifecycle_hooks": {
+    "on_install": {
+      "signature": "(ctx)"
+    }
+  },
+  "panels": [
+    {
+      "panel_id": "evidence_cases",
+      "slot": "left",
+      "title": "Evidence Readiness",
+      "tree": {},
+      "icon": "📂",
+      "refresh": "manual",
+      "center_overlay": false,
+      "default_width": 360,
+      "min_width": 300,
+      "max_width": 520
+    }
+  ]
+}
