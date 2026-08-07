@@ -150,8 +150,9 @@ A feature has three different statuses. They must never be conflated.
 |---|---|---|
 | Evidence Hub P0 code | Implemented locally | README, manifest, handlers and panel exist in `tax-audit-evidence-hub/` |
 | Evidence Hub build/validation | Passed locally | `imperal build .`, `imperal validate .` and 3 local tests passed on 7 Aug 2026 |
-| Evidence Hub deployed / installed in user panel | **Blocked before deployment** | First deploy returned `App not found`; app must first be registered with a real HTTPS Git URL. The local project has no Git remote. |
-| Evidence Hub demo flow in live panel | **Not verified** | Publish/register source repository → deploy → install → create a fictional case → rehearse steps 1–9 |
+| Evidence Hub deployment | Passed | Deployed from the public GitHub repository at commit `6d6ffe45`; platform validation passed `20/20`. |
+| Evidence Hub installation in user panel | **Pending Marketplace review** | App submission checks passed, but Marketplace does not yet list it for installation. |
+| Evidence Hub demo flow in live panel | **Not verified** | Marketplace approval → install → create a fictional case → rehearse steps 1–9 |
 | Google Drive intake | **Blocked** | Account needs reconnect; context permission disabled |
 | Google Analytics | Not relevant to TAXCON core demo | Exclude |
 | Google Search Console | Working but not relevant | Exclude |

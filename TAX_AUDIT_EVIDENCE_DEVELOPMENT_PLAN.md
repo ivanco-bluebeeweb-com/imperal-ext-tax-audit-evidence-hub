@@ -165,7 +165,7 @@ Only after Gates A–C are passed may we call P0 “ready for TAXCON demo.”
 
 **Why first:** a non-visible app cannot be a product or event demo.
 
-**Observed release blocker — 7 August 2026:** local build, validation and the three local tests passed. The source was then pushed to a private GitHub repository and `tax-audit-evidence-hub` was registered successfully in the Imperal Developer Catalog. The next deployment attempt stopped at Git clone because GitHub requested credentials for the private HTTPS repository; the deployment service has no demonstrated access. Required release sequence now: decide and establish a safe Git source-access route (public repository only after a secret review, or a supported private-repository credential flow) → deploy → install → complete the DemoCo panel proof.
+**Release status — 7 August 2026:** local build, validation and the three local tests passed. After a credential-pattern review, source was pushed to the required public GitHub repository and the app was registered. Deployment then passed at commit `6d6ffe45` with validation `20/20`; manifest, panel, icon and catalog tool sync succeeded. The app has been submitted to Marketplace review with all listed checks passed, but it is not yet installable until Marketplace approval. Required release sequence now: Marketplace approval → install → complete the DemoCo panel proof.
 
 **Scope:** Gates A–C above; no extra features.
 
