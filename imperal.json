@@ -2168,6 +2168,18 @@
       "default_width": 360,
       "min_width": 300,
       "max_width": 520
+    },
+    {
+      "panel_id": "evidence_case_detail",
+      "slot": "right",
+      "title": "Evidence case",
+      "tree": {},
+      "icon": "📋",
+      "refresh": "manual",
+      "center_overlay": false,
+      "default_width": 620,
+      "min_width": 440,
+      "max_width": 900
     }
   ]
 }

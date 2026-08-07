@@ -21,14 +21,20 @@ async def test_human_led_evidence_pack_happy_path():
     pack=await m.build_evidence_pack(ctx,BuildEvidencePackParams(case_id=case.data.id)); assert pack.status=="success" and "Bank confirmation" in pack.data.index_markdown
     approved=await m.approve_evidence_pack(ctx,ApproveEvidencePackParams(case_id=case.data.id,approved_by="Senior Auditor",approval_note="Ready for audit review.")); assert approved.status=="success" and approved.data.status=="approved"
 
+def test_case_row_opens_case_detail_in_the_selected_language():
+    row = panels._case_row({"id": "case-123", "case_name": "DemoCo", "status": "open"}, panels.COPY["ru"], "ru")
+    assert row.props["on_click"].params["function"] == "__panel__evidence_case_detail"
+    assert row.props["on_click"].params["params"] == {"case_id": "case-123", "language": "ru"}
+
+
 def test_language_switcher_has_ru_ro_en_panel_actions():
     for language in ("ru", "ro", "en"):
         switcher = panels._language_switcher(language)
         buttons = switcher.props["content"].props["children"]
         assert [button.props["label"] for button in buttons] == ["RU", "RO", "EN"]
-        assert buttons[0].props["on_click"].params["params"] == {"language": "ru"}
-        assert buttons[1].props["on_click"].params["params"] == {"language": "ro"}
-        assert buttons[2].props["on_click"].params["params"] == {"language": "en"}
+        assert buttons[0].props["on_click"].params["params"] == {"language": "ru", "case_id": ""}
+        assert buttons[1].props["on_click"].params["params"] == {"language": "ro", "case_id": ""}
+        assert buttons[2].props["on_click"].params["params"] == {"language": "en", "case_id": ""}
         assert [button.props["variant"] for button in buttons].count("primary") == 1
 
 @pytest.mark.asyncio
