@@ -149,10 +149,11 @@ A feature has three different statuses. They must never be conflated.
 | Item | Status | Evidence / next proof |
 |---|---|---|
 | Evidence Hub P0 code | Implemented locally | README, manifest, handlers and panel exist in `tax-audit-evidence-hub/` |
-| Evidence Hub build/validation | Passed locally | `imperal build .`, `imperal validate .` and 3 local tests passed on 7 Aug 2026 |
-| Evidence Hub deployment | Passed | Deployed from the public GitHub repository at commit `6d6ffe45`; platform validation passed `20/20`. |
+| Evidence Hub build/validation | Passed locally | `imperal build .`, `imperal validate .` and 4 local tests passed on 7 Aug 2026 |
+| Evidence Hub deployment | Passed | Deployed from the public GitHub repository at commit `7c2c73ab`; platform validation passed `20/20`. |
 | Evidence Hub installation in user panel | **Pending Marketplace review** | App submission checks passed, but Marketplace does not yet list it for installation. |
-| Evidence Hub demo flow in live panel | **Not verified** | Marketplace approval → install → create a fictional case → rehearse steps 1–9 |
+| Evidence Hub P0 through deployed actions | Passed — API proof | Fictional DemoCo flow reached named human pack approval; incomplete pack and anonymous approvals were blocked. |
+| Evidence Hub demo flow in live panel | **Not verified** | Marketplace approval → install → repeat the fictional flow visibly in panel |
 | Google Drive intake | **Blocked** | Account needs reconnect; context permission disabled |
 | Google Analytics | Not relevant to TAXCON core demo | Exclude |
 | Google Search Console | Working but not relevant | Exclude |

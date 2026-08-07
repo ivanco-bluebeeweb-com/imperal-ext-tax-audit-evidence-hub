@@ -165,7 +165,7 @@ Only after Gates A–C are passed may we call P0 “ready for TAXCON demo.”
 
 **Why first:** a non-visible app cannot be a product or event demo.
 
-**Release status — 7 August 2026:** local build, validation and the three local tests passed. After a credential-pattern review, source was pushed to the required public GitHub repository and the app was registered. Deployment then passed at commit `6d6ffe45` with validation `20/20`; manifest, panel, icon and catalog tool sync succeeded. The app has been submitted to Marketplace review with all listed checks passed, but it is not yet installable until Marketplace approval. Required release sequence now: Marketplace approval → install → complete the DemoCo panel proof.
+**Release status — 7 August 2026:** local build, validation and four local tests passed. After a credential-pattern review, source was pushed to the required public GitHub repository and the app was registered. Deployment then passed at commit `7c2c73ab` with validation `20/20`; manifest, panel, icon and catalog tool sync succeeded. A full fictional DemoCo P0 flow also passed through deployed actions, including fail-closed gates and named human pack approval. The app has been submitted to Marketplace review with all listed checks passed, but it is not yet installable until Marketplace approval. Required release sequence now: Marketplace approval → install → repeat the DemoCo flow visibly in the panel.
 
 **Scope:** Gates A–C above; no extra features.
 
