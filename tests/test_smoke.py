@@ -4,6 +4,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from imperal_sdk.testing import MockContext
 import main as m
+import panels
 from schemas import *
 
 @pytest.mark.asyncio
@@ -19,6 +20,16 @@ async def test_human_led_evidence_pack_happy_path():
     task=await m.create_task(ctx,CreateTaskParams(case_id=case.data.id,title_text="Confirm bank balance",assignee="Elena",evidence_item_id=evidence.data.id)); assert task.status=="success"
     pack=await m.build_evidence_pack(ctx,BuildEvidencePackParams(case_id=case.data.id)); assert pack.status=="success" and "Bank confirmation" in pack.data.index_markdown
     approved=await m.approve_evidence_pack(ctx,ApproveEvidencePackParams(case_id=case.data.id,approved_by="Senior Auditor",approval_note="Ready for audit review.")); assert approved.status=="success" and approved.data.status=="approved"
+
+def test_language_switcher_has_ru_ro_en_panel_actions():
+    for language in ("ru", "ro", "en"):
+        switcher = panels._language_switcher(language)
+        buttons = switcher.props["content"].props["children"]
+        assert [button.props["label"] for button in buttons] == ["RU", "RO", "EN"]
+        assert buttons[0].props["on_click"].params["params"] == {"language": "ru"}
+        assert buttons[1].props["on_click"].params["params"] == {"language": "ro"}
+        assert buttons[2].props["on_click"].params["params"] == {"language": "en"}
+        assert [button.props["variant"] for button in buttons].count("primary") == 1
 
 @pytest.mark.asyncio
 async def test_empty_case_list_returns_a_successful_read_response():
