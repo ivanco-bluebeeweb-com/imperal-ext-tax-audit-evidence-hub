@@ -2171,15 +2171,12 @@
     },
     {
       "panel_id": "evidence_case_detail",
-      "slot": "right",
+      "slot": "center",
       "title": "Evidence case",
       "tree": {},
       "icon": "📋",
       "refresh": "manual",
-      "center_overlay": false,
-      "default_width": 620,
-      "min_width": 440,
-      "max_width": 900
+      "center_overlay": true
     }
   ]
 }

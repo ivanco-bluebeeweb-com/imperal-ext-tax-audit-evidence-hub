@@ -131,7 +131,7 @@ async def evidence_cases_panel(ctx, language: str = "en", **kwargs) -> object:
     return ui.Stack(direction="v", gap=3, children=[_language_switcher(language), _create_case_form(copy), ui.Divider(), workflow, ui.Divider(), cases])
 
 
-@ext.panel("evidence_case_detail", slot="right", title="Evidence case", icon="📋", default_width=620, min_width=440, max_width=900)
+@ext.panel("evidence_case_detail", slot="center", title="Evidence case", icon="📋", center_overlay=True)
 async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en", **kwargs) -> object:
     """Human-led P0 workspace for one evidence-readiness case."""
     language = language if language in COPY else "en"
