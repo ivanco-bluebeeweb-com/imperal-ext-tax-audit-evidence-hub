@@ -37,7 +37,7 @@ async def list_cases(ctx, params: ListCasesParams) -> ActionResult:
     """Handle list cases within the human-led evidence workflow."""
     page=await ctx.store.query("evidence_cases", order_by="-created_at", limit=params.limit)
     docs=[d for d in page.data if not params.status or d.data.get("status")==params.status]
-    return ActionResult.success(EvidenceCaseList(items=[entity(EvidenceCase,d) for d in docs], total=len(docs)))
+    return ActionResult.success(EvidenceCaseList(items=[entity(EvidenceCase,d) for d in docs], total=len(docs)), summary="Evidence readiness cases listed.")
 
 @chat.function("add_checklist_item", description="Add a human-authored document/control requirement to a case.", action_type="write", data_model=ChecklistItem, effects=["checklist_item.create"], event="tax-audit-evidence-hub.add_checklist_item")
 async def add_checklist_item(ctx, params: AddChecklistItemParams) -> ActionResult:
@@ -98,19 +98,19 @@ async def update_task(ctx, params: UpdateTaskParams) -> ActionResult:
 async def list_checklist_items(ctx, params: ListCaseItemsParams) -> ActionResult:
     """Handle list checklist items within the human-led evidence workflow."""
     await get(ctx,"evidence_cases",params.case_id,"Case not found."); docs=[d for d in await rows(ctx,"checklist_items",params.case_id,params.limit) if not params.status or d.data.get("status")==params.status]
-    return ActionResult.success(ChecklistItemList(items=[entity(ChecklistItem,d) for d in docs],total=len(docs)))
+    return ActionResult.success(ChecklistItemList(items=[entity(ChecklistItem,d) for d in docs],total=len(docs)),summary="Checklist items listed.")
 
 @chat.function("list_evidence", description="List registered evidence sources and human review status for one case.", action_type="read", data_model=EvidenceItemList)
 async def list_evidence(ctx, params: ListCaseItemsParams) -> ActionResult:
     """Handle list evidence within the human-led evidence workflow."""
     await get(ctx,"evidence_cases",params.case_id,"Case not found."); docs=[d for d in await rows(ctx,"evidence_items",params.case_id,params.limit) if not params.status or d.data.get("status")==params.status]
-    return ActionResult.success(EvidenceItemList(items=[entity(EvidenceItem,d) for d in docs],total=len(docs)))
+    return ActionResult.success(EvidenceItemList(items=[entity(EvidenceItem,d) for d in docs],total=len(docs)),summary="Evidence items listed.")
 
 @chat.function("list_tasks", description="List human-owned preparation tasks for one case.", action_type="read", data_model=CaseTaskList)
 async def list_tasks(ctx, params: ListCaseItemsParams) -> ActionResult:
     """Handle list tasks within the human-led evidence workflow."""
     await get(ctx,"evidence_cases",params.case_id,"Case not found."); docs=[d for d in await rows(ctx,"case_tasks",params.case_id,params.limit) if not params.status or d.data.get("status")==params.status]
-    return ActionResult.success(CaseTaskList(items=[entity(CaseTask,d) for d in docs],total=len(docs)))
+    return ActionResult.success(CaseTaskList(items=[entity(CaseTask,d) for d in docs],total=len(docs)),summary="Preparation tasks listed.")
 
 @chat.function("build_evidence_pack", description="Build a read-only index of evidence already approved by a named human. It is not a tax opinion or filing.", action_type="write", data_model=EvidencePack, effects=["evidence_pack.build"], event="tax-audit-evidence-hub.build_evidence_pack")
 async def build_evidence_pack(ctx, params: BuildEvidencePackParams) -> ActionResult:

@@ -21,6 +21,13 @@ async def test_human_led_evidence_pack_happy_path():
     approved=await m.approve_evidence_pack(ctx,ApproveEvidencePackParams(case_id=case.data.id,approved_by="Senior Auditor",approval_note="Ready for audit review.")); assert approved.status=="success" and approved.data.status=="approved"
 
 @pytest.mark.asyncio
+async def test_empty_case_list_returns_a_successful_read_response():
+    result = await m.list_cases(MockContext(), ListCasesParams(limit=20))
+    assert result.status == "success"
+    assert result.data.total == 0
+    assert result.summary == "Evidence readiness cases listed."
+
+@pytest.mark.asyncio
 async def test_evidence_requires_https_and_human_approval_identity():
     ctx=MockContext(); case=await m.create_case(ctx,CreateCaseParams(case_name="Close",organization_name="Acme",period="2026-01",request_type="close",owner="Elena"))
     insecure=await m.register_evidence(ctx,RegisterEvidenceParams(case_id=case.data.id,title_text="Invoice",source_url="http://bad.example/a.pdf")); assert insecure.status != "success"
