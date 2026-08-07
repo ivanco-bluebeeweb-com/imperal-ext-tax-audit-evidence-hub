@@ -149,11 +149,11 @@ A feature has three different statuses. They must never be conflated.
 | Item | Status | Evidence / next proof |
 |---|---|---|
 | Evidence Hub P0 code | Implemented locally | README, manifest, handlers and panel exist in `tax-audit-evidence-hub/` |
-| Evidence Hub build/validation | Passed locally | `imperal build .`, `imperal validate .` and 4 local tests passed on 7 Aug 2026 |
-| Evidence Hub deployment | Passed | Deployed from the public GitHub repository at commit `7c2c73ab`; platform validation passed `20/20`. |
-| Evidence Hub installation in user panel | **Pending Marketplace review** | App submission checks passed, but Marketplace does not yet list it for installation. |
+| Evidence Hub build/validation | Passed locally | `imperal build .`, `imperal validate .` and 6 local tests passed on 7 Aug 2026 |
+| Evidence Hub deployment | Passed | Deployed from the public GitHub repository at commit `ece78e54`; platform validation passed `20/20` and synced the center case-detail workspace. |
+| Evidence Hub installation in owner panel | Passed | The owner opened Evidence Readiness in the Imperal panel. |
 | Evidence Hub P0 through deployed actions | Passed — API proof | Fictional DemoCo flow reached named human pack approval; incomplete pack and anonymous approvals were blocked. |
-| Evidence Hub demo flow in live panel | **Not verified** | Marketplace approval → install → repeat the fictional flow visibly in panel |
+| Evidence Hub demo flow in owner Chrome panel | **Passed — UI proof** | Created a fictional requirement, fictional HTTPS evidence link and task; named fictional human reviews changed items to `approved_for_pack`; pack build first did not produce a pack while incomplete, then produced a read-only index after approvals; named fictional pack approval changed the case to `approved`. RU/RO/EN switching was visibly checked. No document content was opened or read. |
 | Google Drive intake | **Blocked** | Account needs reconnect; context permission disabled |
 | Google Analytics | Not relevant to TAXCON core demo | Exclude |
 | Google Search Console | Working but not relevant | Exclude |

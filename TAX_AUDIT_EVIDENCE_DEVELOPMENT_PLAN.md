@@ -165,7 +165,7 @@ Only after Gates A–C are passed may we call P0 “ready for TAXCON demo.”
 
 **Why first:** a non-visible app cannot be a product or event demo.
 
-**Release status — 7 August 2026:** local build, validation and four local tests passed. After a credential-pattern review, source was pushed to the required public GitHub repository and the app was registered. Deployment then passed at commit `7c2c73ab` with validation `20/20`; manifest, panel, icon and catalog tool sync succeeded. A full fictional DemoCo P0 flow also passed through deployed actions, including fail-closed gates and named human pack approval. The app has been submitted to Marketplace review with all listed checks passed, but it is not yet installable until Marketplace approval. Required release sequence now: Marketplace approval → install → repeat the DemoCo flow visibly in the panel.
+**Release status — 7 August 2026:** local build, validation and six local tests passed. After a credential-pattern review, source was pushed to the required public GitHub repository and the app was registered. Deployment passed at commit `ece78e54` with validation `20/20`; the list panel, central case-detail workspace and language switcher were synced. A full fictional DemoCo P0 flow then passed in the owner’s Chrome through the visible panel: checklist → fictional HTTPS evidence link → task → named human reviews → read-only pack index → named fictional pack approval. An incomplete checklist did not produce a pack before the named approvals. No document was read and no tax/audit conclusion was created. The required next gate is a non-developer usability dry run, followed by discovery interviews before P1 templates are selected.
 
 **Scope:** Gates A–C above; no extra features.
 
@@ -173,7 +173,7 @@ Only after Gates A–C are passed may we call P0 “ready for TAXCON demo.”
 
 **Acceptance criteria:** all Gate B steps pass; build/validate/tests pass; user-facing copy keeps the safety boundary clear.
 
-**Status:** next required work.
+**Status:** UI proof passed; conduct the non-developer usability dry run before calling P0 TAXCON-demo ready.
 
 ---
 
@@ -193,7 +193,7 @@ Only after Gates A–C are passed may we call P0 “ready for TAXCON demo.”
 
 **Not in scope:** Drive, email, document extraction, tax advice, AI decisioning.
 
-**Status:** conditional — build only if the live proof exposes this gap.
+**Status:** delivered after the live proof exposed this gap; the case detail is now a center-panel workspace with checklist, evidence, tasks, human reviews and pack actions.
 
 ---
 
