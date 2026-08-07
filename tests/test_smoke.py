@@ -100,3 +100,26 @@ def test_pack_summary_reports_readable_counts_and_blockers():
     all_clear = panels._pack_summary(copy, [{"status": "approved_for_pack"}], [{"status": "approved_for_pack"}], [])
     assert copy["pack_summary_clear"] in all_clear
 
+
+@pytest.mark.asyncio
+async def test_case_detail_renders_workspace_sections_as_a_single_accordion():
+    ctx = MockContext()
+    case = await m.create_case(ctx, CreateCaseParams(case_name="FY2026 audit PBC", organization_name="Acme", period="FY2026", request_type="audit PBC", owner="Elena"))
+    item = await m.add_checklist_item(ctx, AddChecklistItemParams(case_id=case.data.id, label="Bank confirmations", owner="Elena"))
+    await m.register_evidence(ctx, RegisterEvidenceParams(case_id=case.data.id, checklist_item_id=item.data.id, title_text="Bank confirmation", source_url="https://drive.example/bank.pdf"))
+    await m.create_task(ctx, CreateTaskParams(case_id=case.data.id, title_text="Confirm bank balance", assignee="Elena"))
+
+    workspace = await panels.evidence_case_detail_panel(ctx, case_id=case.data.id, language="en")
+    children = workspace.props["children"]
+    accordion = next(node for node in children if node.props.get("sections") is not None)
+    assert accordion.type == "Accordion"
+    section_ids = [section["id"] for section in accordion.props["sections"]]
+    assert section_ids == ["checklist", "evidence", "tasks", "review", "pack"]
+    assert accordion.props["allow_multiple"] is True
+    # Counts are reflected in the visible section titles so a human sees progress without expanding.
+    assert accordion.props["sections"][0]["title"] == "Checklist (1)"
+    assert accordion.props["sections"][1]["title"] == "Evidence register (1)"
+    assert accordion.props["sections"][2]["title"] == "Preparation tasks (1)"
+    assert accordion.props["sections"][3]["title"] == "Human review"
+    assert accordion.props["sections"][4]["title"] == "Evidence pack"
+

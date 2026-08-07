@@ -236,7 +236,7 @@ async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en
         ui.Badge(_status_label(case.get("status", "open"), copy), color="green" if case.get("status") == "approved" else "yellow" if case.get("status") == "ready_for_review" else "gray"),
         ui.Button(copy["back"], variant="secondary", on_click=ui.Call("__panel__evidence_cases", language=language)),
     ]))
-    checklist_card = ui.Card(title=copy["checklist"], content=ui.Stack(direction="v", gap=2, children=[
+    checklist_section = {"id": "checklist", "title": f"{copy['checklist']} ({len(checklist)})", "children": [
         _record_list(checklist, "label", copy),
         ui.Text(f"{copy['required_mark']}: {copy['requirement']}. {copy['optional_mark']}: {copy['requirement_help']}, {copy['responsible']}, {copy['due_date']}.", variant="caption"),
         ui.Form(action="add_checklist_item", submit_label=copy["add_requirement"], defaults={"case_id": case_id}, children=[
@@ -245,8 +245,8 @@ async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en
             ui.Input(param_name="owner", placeholder=copy["responsible"]),
             ui.Input(param_name="due_date", placeholder=copy["due_date"]),
         ]),
-    ]))
-    evidence_card = ui.Card(title=copy["evidence"], content=ui.Stack(direction="v", gap=2, children=[
+    ]}
+    evidence_section = {"id": "evidence", "title": f"{copy['evidence']} ({len(evidence)})", "children": [
         _record_list(evidence, "title_text", copy),
         ui.Text(f"{copy['required_mark']}: {copy['evidence_title']}, {copy['https_link']}. {copy['optional_mark']}: {copy['source_type']}, {copy['link_to_requirement']}, {copy['period']}, {copy['reference']}, {copy['evidence_owner']}.", variant="caption"),
         ui.Form(action="register_evidence", submit_label=copy["register_evidence"], defaults={"case_id": case_id}, children=[
@@ -258,8 +258,8 @@ async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en
             ui.Input(param_name="reference", placeholder=copy["reference"]),
             ui.Input(param_name="owner", placeholder=copy["evidence_owner"]),
         ]),
-    ]))
-    tasks_card = ui.Card(title=copy["tasks"], content=ui.Stack(direction="v", gap=2, children=[
+    ]}
+    tasks_section = {"id": "tasks", "title": f"{copy['tasks']} ({len(tasks)})", "children": [
         _record_list(tasks, "title_text", copy),
         ui.Text(f"{copy['required_mark']}: {copy['task_title']}. {copy['optional_mark']}: {copy['assignee']}, {copy['due_date']}, {copy['link_to_evidence']}.", variant="caption"),
         ui.Form(action="create_task", submit_label=copy["create_task"], defaults={"case_id": case_id}, children=[
@@ -268,8 +268,9 @@ async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en
             ui.Input(param_name="due_date", placeholder=copy["due_date"]),
             ui.Select(param_name="evidence_item_id", options=evidence_options),
         ]),
-    ]))
-    review_card = ui.Card(title=copy["review"], subtitle=copy["safety"], content=ui.Stack(direction="v", gap=2, children=[
+    ]}
+    review_section = {"id": "review", "title": copy["review"], "children": [
+        ui.Text(copy["safety"], variant="caption"),
         ui.Text(f"{copy['required_mark']}: {copy['select_item']}, {copy['status']}, {copy['named_reviewer']}.", variant="caption"),
         ui.Form(action="update_checklist_item", submit_label=copy["review_checklist"], children=[
             ui.Select(param_name="checklist_item_id", options=checklist_options), ui.Select(param_name="status", options=item_statuses),
@@ -282,8 +283,9 @@ async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en
         ui.Form(action="update_task", submit_label=copy["tasks"], children=[
             ui.Select(param_name="task_id", options=_options(tasks, "title_text", copy["select_item"])), ui.Select(param_name="status", options=task_statuses),
         ]),
-    ]))
-    pack_card = ui.Card(title=copy["pack"], subtitle=copy["safety"], content=ui.Stack(direction="v", gap=2, children=[
+    ]}
+    pack_section = {"id": "pack", "title": copy["pack"], "children": [
+        ui.Text(copy["safety"], variant="caption"),
         ui.Text(_pack_summary(copy, checklist, evidence, tasks), variant="caption"),
         _record_list(packs, "status", copy),
         ui.Text(f"{copy['required_mark']}: {copy['approver']}, {copy['approval_note']}.", variant="caption"),
@@ -291,5 +293,6 @@ async def evidence_case_detail_panel(ctx, case_id: str = "", language: str = "en
         ui.Form(action="approve_evidence_pack", submit_label=copy["approve"], defaults={"case_id": case_id}, children=[
             ui.Input(param_name="approved_by", placeholder=copy["approver"]), ui.Input(param_name="approval_note", placeholder=copy["approval_note"]),
         ]),
-    ]))
-    return ui.Stack(direction="v", gap=3, children=[_language_switcher(language, case_id), header, next_step_card, ui.Grid(columns=2, gap=3, children=[checklist_card, evidence_card, tasks_card, review_card, pack_card])])
+    ]}
+    workspace = ui.Accordion(sections=[checklist_section, evidence_section, tasks_section, review_section, pack_section], allow_multiple=True)
+    return ui.Stack(direction="v", gap=3, children=[_language_switcher(language, case_id), header, next_step_card, workspace])
