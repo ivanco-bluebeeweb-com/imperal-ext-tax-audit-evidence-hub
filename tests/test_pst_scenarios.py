@@ -163,3 +163,50 @@ async def test_error_update_task_unknown_task():
     with pytest.raises(ValueError, match="Task not found"):
         await m.update_task(ctx, UpdateTaskParams(
             task_id="ghost-task", status="done"))
+
+
+# ── Part D2 (SCENARIO_TESTING_STANDARD.md): idempotency / double-invocation ─
+
+async def test_d2_double_approve_evidence_pack_is_naturally_idempotent():
+    """approve_evidence_pack has no prior-status guard -- it just overwrites
+    the pack's approved_by/approved_at/approval_note fields again. A second
+    approval call (e.g. a retried request) must succeed cleanly with the
+    same semantics, not crash or silently double anything."""
+    import schemas as s
+
+    ctx = MockContext()
+    case_id = await _seed_case(ctx)
+    item = await m.register_evidence(ctx, RegisterEvidenceParams(
+        case_id=case_id, title_text="Bank statement Q1",
+        source_url="https://example.com/statement.pdf", period="Q1"))
+    await m.review_evidence(ctx, s.ReviewEvidenceParams(
+        evidence_item_id=item.data.id, status="approved_for_pack",
+        approved_by="Elena"))
+    await m.build_evidence_pack(ctx, s.BuildEvidencePackParams(case_id=case_id))
+
+    first = await m.approve_evidence_pack(ctx, s.ApproveEvidencePackParams(
+        case_id=case_id, approved_by="Elena", approval_note="Looks complete."))
+    assert first.status == "success", first.error
+
+    second = await m.approve_evidence_pack(ctx, s.ApproveEvidencePackParams(
+        case_id=case_id, approved_by="Elena", approval_note="Looks complete."))
+    assert second.status == "success", second.error
+    assert second.data.status == "approved"
+
+
+# ── Part D3 (SCENARIO_TESTING_STANDARD.md): security / SSRF surface -------
+
+async def test_d3_register_evidence_never_fetches_source_url():
+    """register_evidence's own description states it explicitly: 'This app
+    does not fetch, interpret or validate the document.' source_url is
+    purely stored data (an HTTPS pointer a human already trusts), never
+    dereferenced by this app -- confirmed here by grepping main.py for any
+    fetch call anywhere near source_url, so a future change threading it
+    into an outbound request trips this test."""
+    import inspect
+    src = inspect.getsource(m)
+    register_src = src[src.index("async def register_evidence"):
+                        src.index("async def review_evidence")]
+    for banned in ("ctx.http", "httpx.", "requests.", "urlopen"):
+        assert banned not in register_src, (
+            f"register_evidence must never fetch source_url ({banned} found)")
